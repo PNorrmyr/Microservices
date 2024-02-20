@@ -45,8 +45,13 @@ public class RouteController {
     }
 
     @GetMapping("/reports")
-    public Optional<List<Report>> getReports(){
-        return reportService.getAllReports();
+    public ResponseEntity<List<Report>> getReports(){
+        List<Report> reportList = reportService.getAllReports();
+        if (reportList.isEmpty()){
+            return ResponseEntity.status(204).build();
+        } else {
+            return ResponseEntity.status(200).body(reportList);
+        }
     }
 
 }

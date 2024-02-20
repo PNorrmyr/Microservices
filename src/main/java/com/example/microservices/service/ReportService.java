@@ -36,8 +36,8 @@ public class ReportService {
        return true;
     }
 
-    public Optional<List<Report>> getAllReports(){
-        return Optional.of(reportRepository.findAll());
+    public List<Report> getAllReports(){
+        return reportRepository.findAll();
     }
 
 
