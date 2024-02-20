@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/v1/public-transport/routes")
 public class RouteController {
@@ -34,7 +37,31 @@ public class RouteController {
     @GetMapping
     public void getRoute(@RequestHeader ("username") String username,  @RequestBody String startLoc, @RequestBody String endLoc){
 
-        getRoute(startLoc, endLoc);
+        //getRoute(startLoc, endLoc);
 
+    }
+
+    @GetMapping("/favorite")
+    public List<Route> getFavorite(@RequestHeader("username") String username){
+        return routeService.getByFavorite(username);
+    }
+
+    @PatchMapping("/favorite/{id}")
+    public ResponseEntity<String> toggleFavorite(@RequestHeader("username") String username, @PathVariable Long id){
+        Optional<Route> optionalRoute = routeService.getById(id);
+        if (optionalRoute.isEmpty()){
+            return ResponseEntity.status(404).body("Could not find route with id " + id);
+        } else {
+            Route exisingRoute = optionalRoute.get();
+            if (exisingRoute.getFavorite()){
+                exisingRoute.setFavorite(false);
+                routeService.updateFavorit(exisingRoute);
+                return ResponseEntity.status(201).body("Route was unmarked from favorites");
+            } else {
+                exisingRoute.setFavorite(true);
+                routeService.updateFavorit(exisingRoute);
+                return ResponseEntity.status(201).body("Route was marked as favorite");
+            }
+        }
     }
 }

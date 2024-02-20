@@ -23,7 +23,7 @@ public class StationService {
 
     public void getRoute(String startLoc, String endLoc){
 
-        if (getByName(startLoc) == null || getByName(endLoc) == null) {
+     /*   if (getByName(startLoc) == null || getByName(endLoc) == null) {
 
             //Om den inte hittar en station, skicka api till enskild transport och hämta gå tid
             ResponseEntity<Route> walkingRoute = restTemplate
@@ -31,7 +31,7 @@ public class StationService {
 
 
 
-        }
+        }*/
 
     }
 
