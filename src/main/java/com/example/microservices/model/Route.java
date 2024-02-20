@@ -24,4 +24,6 @@ public class Route {
 
     private String travelTime;
 
+    private Boolean favorite;
+
 }
