@@ -16,11 +16,15 @@ public class Route {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
 
+    private String startLoc;
+
+    private String endLoc;
+
     private String departTime;
 
     private String arrival;
 
-    private String swap;
+    private int numberOfSwaps;
 
     private String travelTime;
 
