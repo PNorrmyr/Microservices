@@ -39,7 +39,7 @@ public class ReportController {
         }
     }
 
-    @GetMapping("")
+    @GetMapping()
     public ResponseEntity<List<Report>> getReports(){
         List<Report> reportList = reportService.getAllReports();
         if (reportList.isEmpty()){
