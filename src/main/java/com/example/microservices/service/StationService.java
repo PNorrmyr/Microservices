@@ -14,25 +14,16 @@ public class StationService {
     @Autowired
     private StationRepository stationRepository;
 
-    @Autowired
-    RestTemplate restTemplate;
-
     public Station getByName(String name){
         return stationRepository.findStationByNameEqualsIgnoreCase(name);
     }
 
-    public void getRoute(String startLoc, String endLoc){
+    public boolean confirmStation(String startLoc, String endLoc){
 
-     /*   if (getByName(startLoc) == null || getByName(endLoc) == null) {
-
-            //Om den inte hittar en station, skicka api till enskild transport och hämta gå tid
-            ResponseEntity<Route> walkingRoute = restTemplate
-                    .getForEntity("", walkingRoute.class);
-
-
-
-        }*/
-
+        if (getByName(startLoc) == null || getByName(endLoc) == null) {
+            return false;
+        }
+        return true;
     }
 
 

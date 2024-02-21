@@ -1,12 +1,15 @@
 package com.example.microservices.controller;
 
+import com.example.microservices.model.ResponseDTO;
 import com.example.microservices.model.Route;
-import com.example.microservices.model.Station;
+import com.example.microservices.model.RouteRequestDTO;
+import com.example.microservices.model.WalkingRouteDTO;
 import com.example.microservices.service.RouteService;
 import com.example.microservices.service.StationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +22,8 @@ public class RouteController {
     private RouteService routeService;
     @Autowired
     private StationService stationService;
+    @Autowired
+    RestTemplate restTemplate;
 
 
 
@@ -26,19 +31,20 @@ public class RouteController {
         this.routeService = routeService;
     }
 
- /*   @GetMapping
-    public String getTrip(){
-        String apiKey = "81137d7358a64f9eb6bcddbb99170f21";
-        String url = "https://journeyplanner.integration.sl.se/v1/TravelplannerV3_1/xsd.xml?key=" + apiKey;
-        return routeService.callTrip(url, apiKey);
-    }
-*/
 
-    @GetMapping
-    public void getRoute(@RequestHeader ("username") String username,  @RequestBody String startLoc, @RequestBody String endLoc){
+    //TODO Work in progress
+    @PostMapping
+    public ResponseDTO getRoute(@RequestBody RouteRequestDTO routeRequestDTO) {
 
-        //getRoute(startLoc, endLoc);
+        //Kollar om start eller slut destination inte är en station
+        if (!stationService.confirmStation(routeRequestDTO.getStartPos(), routeRequestDTO.getDest())) {
+            System.out.println(routeRequestDTO.getStartPos());
+            //Om den inte hittar en station, skicka api till enskild transport och hämta gå tid
+            return routeService.getRoute(routeRequestDTO.getStartPos(), routeRequestDTO.getDest());
+            //Annars ge rutt
 
+        }
+        return null;
     }
 
     @GetMapping("/favorite")

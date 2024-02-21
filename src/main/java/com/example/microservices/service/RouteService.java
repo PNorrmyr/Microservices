@@ -1,8 +1,11 @@
 package com.example.microservices.service;
 
+import com.example.microservices.model.ResponseDTO;
 import com.example.microservices.model.Route;
+import com.example.microservices.model.WalkingRouteDTO;
 import com.example.microservices.repository.RouteRespository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.client.RestTemplate;
@@ -23,16 +26,7 @@ public class RouteService {
         this.restTemplate = restTemplate;
     }
 
-   /* public String callTrip(String url, String apiKey){
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorisation", "Bearer " + apiKey);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class );
-        return response.getBody();
-    }*/
-
-    public List<Route> getByFavorite(@RequestHeader("usename") String username){
+    public List<Route> getByFavorite(@RequestHeader("username") String username){
         return routeRespository.findAllByFavoriteIsTrue();
     }
 
@@ -46,8 +40,22 @@ public class RouteService {
 
 
 
+    //TODO Work in progress getting error
+    public ResponseDTO getRoute(String startLoc, String dest){
+        ResponseDTO responseDTO = new ResponseDTO();
+        System.out.println(startLoc);
 
+        ResponseEntity<WalkingRouteDTO> responseEntity = restTemplate
+                .getForEntity("https://localhost:8081/api/v1/routes/Foot/" + startLoc + "/" + dest, WalkingRouteDTO.class);
 
+        WalkingRouteDTO walkingRouteDTO = responseEntity.getBody();
 
-
+        responseDTO.setWalkingRouteDTO(walkingRouteDTO);
+        return responseDTO;
+    }
 }
+
+
+
+
+
