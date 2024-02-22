@@ -38,7 +38,6 @@ public class RouteController {
 
         //Kollar om start eller slut destination inte är en station
         if (!stationService.confirmStation(routeRequestDTO.getStartPos(), routeRequestDTO.getDest())) {
-            System.out.println(routeRequestDTO.getStartPos());
             //Om den inte hittar en station, skicka api till enskild transport och hämta gå tid
             return routeService.getRoute(routeRequestDTO.getStartPos(), routeRequestDTO.getDest());
             //Annars ge rutt
@@ -48,8 +47,13 @@ public class RouteController {
     }
 
     @GetMapping("/favorite")
-    public List<Route> getFavorite(@RequestHeader("username") String username){
-        return routeService.getByFavorite(username);
+    public ResponseEntity<List<Route>> getFavorite(@RequestHeader("username") String username){
+        List<Route> favoriteList = routeService.getByFavorite(username);
+        if (favoriteList.isEmpty()){
+            return ResponseEntity.status(204).build();
+        } else {
+            return ResponseEntity.status(200).body(favoriteList);
+        }
     }
 
     @PatchMapping("/favorite/{id}")
@@ -62,11 +66,11 @@ public class RouteController {
             if (exisingRoute.getFavorite()){
                 exisingRoute.setFavorite(false);
                 routeService.updateFavorit(exisingRoute);
-                return ResponseEntity.status(201).body("Route was unmarked from favorites");
+                return ResponseEntity.status(200).body("Route was unmarked from favorites");
             } else {
                 exisingRoute.setFavorite(true);
                 routeService.updateFavorit(exisingRoute);
-                return ResponseEntity.status(201).body("Route was marked as favorite");
+                return ResponseEntity.status(200).body("Route was marked as favorite");
             }
         }
     }

@@ -43,7 +43,6 @@ public class RouteService {
     //TODO Work in progress getting error
     public ResponseDTO getRoute(String startLoc, String dest){
         ResponseDTO responseDTO = new ResponseDTO();
-        System.out.println(startLoc);
 
         ResponseEntity<WalkingRouteDTO> responseEntity = restTemplate
                 .getForEntity("https://localhost:8081/api/v1/routes/Foot/" + startLoc + "/" + dest, WalkingRouteDTO.class);
