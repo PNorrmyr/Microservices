@@ -20,9 +20,9 @@ public class StationService {
     public boolean confirmStation(String startLoc, String endLoc){
 
         if (getByName(startLoc) == null || getByName(endLoc) == null) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
 

@@ -38,7 +38,7 @@ public class RouteController {
         //Kolla om start eller slut destination inte är en station
         if (!stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest())){
             //Om den inte hittar en station, skicka api till enskild transport och hämta gå tid
-            System.out.println(routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest()));
+            routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest());
 
         }
 
