@@ -2,8 +2,10 @@ package com.example.microservices.service;
 
 import com.example.microservices.model.PublicRoute;
 import com.example.microservices.model.PublicRoutes;
+import com.example.microservices.model.WalkingRouteDTO;
 import com.example.microservices.repository.RouteRespository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.client.RestTemplate;
@@ -39,16 +41,12 @@ public class RouteService {
 
 
     //TODO Work in progress getting error
-    public void getRoute(String startLoc, String dest){
-  /*      ResponseDTO responseDTO = new ResponseDTO();
+    public ResponseEntity<WalkingRouteDTO> getWalkingRoute(String startLoc, String dest){
+        ResponseEntity<WalkingRouteDTO> responseEntity = restTemplate
+                .getForEntity("http://localhost:8081/api/v1/routes/foot/" + startLoc + "/" + dest, WalkingRouteDTO.class);
 
-        ResponseEntity<WalkingRoutesDTO> responseEntity = restTemplate
-                .getForEntity("http://localhost:8081/api/v1/routes/foot/" + startLoc + "/" + dest, WalkingRoutesDTO.class);
-
-        WalkingRoutesDTO walkingRoutesDTO = responseEntity.getBody();
-
-        responseDTO.setWalkingRoutesDTO(walkingRoutesDTO);
-        return responseDTO;*/
+        WalkingRouteDTO walkingRoutesDTO = responseEntity.getBody();
+        return ResponseEntity.status(200).body(walkingRoutesDTO);
     }
 
 

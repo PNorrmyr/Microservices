@@ -36,9 +36,11 @@ public class RouteController {
     public ResponseEntity<PublicRoutes> getPublicRoute(@RequestBody RouteRequestDTO requestDTO) {
 
         //Kolla om start eller slut destination inte är en station
+        if (!stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest())){
             //Om den inte hittar en station, skicka api till enskild transport och hämta gå tid
+            System.out.println(routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest()));
 
-
+        }
 
         //Annars ge rutt
             PublicRoutes publicRoutes = new PublicRoutes();
