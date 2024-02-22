@@ -1,11 +1,9 @@
 package com.example.microservices.service;
 
-import com.example.microservices.model.ResponseDTO;
-import com.example.microservices.model.Route;
-import com.example.microservices.model.WalkingRouteDTO;
+import com.example.microservices.model.PublicRoute;
+import com.example.microservices.model.PublicRoutes;
 import com.example.microservices.repository.RouteRespository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.client.RestTemplate;
@@ -26,31 +24,37 @@ public class RouteService {
         this.restTemplate = restTemplate;
     }
 
-    public List<Route> getByFavorite(@RequestHeader("username") String username){
+    public List<PublicRoute> getByFavorite(@RequestHeader("username") String username){
         return routeRespository.findAllByFavoriteIsTrue();
     }
 
-    public Optional<Route> getById(Long Id){
+    public Optional<PublicRoute> getById(Long Id){
         return routeRespository.findById(Id);
     }
 
-    public void updateFavorit(Route route){
+    public void updateFavorit(PublicRoute route){
         routeRespository.save(route);
     }
 
 
 
     //TODO Work in progress getting error
-    public ResponseDTO getRoute(String startLoc, String dest){
-        ResponseDTO responseDTO = new ResponseDTO();
+    public void getRoute(String startLoc, String dest){
+  /*      ResponseDTO responseDTO = new ResponseDTO();
 
-        ResponseEntity<WalkingRouteDTO> responseEntity = restTemplate
-                .getForEntity("https://localhost:8081/api/v1/routes/Foot/" + startLoc + "/" + dest, WalkingRouteDTO.class);
+        ResponseEntity<WalkingRoutesDTO> responseEntity = restTemplate
+                .getForEntity("http://localhost:8081/api/v1/routes/foot/" + startLoc + "/" + dest, WalkingRoutesDTO.class);
 
-        WalkingRouteDTO walkingRouteDTO = responseEntity.getBody();
+        WalkingRoutesDTO walkingRoutesDTO = responseEntity.getBody();
 
-        responseDTO.setWalkingRouteDTO(walkingRouteDTO);
-        return responseDTO;
+        responseDTO.setWalkingRoutesDTO(walkingRoutesDTO);
+        return responseDTO;*/
+    }
+
+
+    public List<PublicRoute> getPublicRoute(String startPos, String dest){
+        return routeRespository.findAllByStartLocEqualsIgnoreCaseAndEndLocContainsIgnoreCase(startPos, dest);
+
     }
 }
 

@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name = "Routes")
-public class Route {
+@Table(name = "Route")
+public class PublicRoute {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,9 +1,8 @@
 package com.example.microservices.controller;
 
-import com.example.microservices.model.ResponseDTO;
-import com.example.microservices.model.Route;
+import com.example.microservices.model.PublicRoute;
+import com.example.microservices.model.PublicRoutes;
 import com.example.microservices.model.RouteRequestDTO;
-import com.example.microservices.model.WalkingRouteDTO;
 import com.example.microservices.service.RouteService;
 import com.example.microservices.service.StationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,21 +33,23 @@ public class RouteController {
 
     //TODO Work in progress
     @PostMapping
-    public ResponseDTO getRoute(@RequestBody RouteRequestDTO routeRequestDTO) {
+    public ResponseEntity<PublicRoutes> getPublicRoute(@RequestBody RouteRequestDTO requestDTO) {
 
-        //Kollar om start eller slut destination inte är en station
-        if (!stationService.confirmStation(routeRequestDTO.getStartPos(), routeRequestDTO.getDest())) {
+        //Kolla om start eller slut destination inte är en station
             //Om den inte hittar en station, skicka api till enskild transport och hämta gå tid
-            return routeService.getRoute(routeRequestDTO.getStartPos(), routeRequestDTO.getDest());
-            //Annars ge rutt
 
-        }
-        return null;
+
+
+        //Annars ge rutt
+            PublicRoutes publicRoutes = new PublicRoutes();
+            publicRoutes.setPublicRoutes(routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest()));
+            return ResponseEntity.status(200).body(publicRoutes);
+
     }
 
     @GetMapping("/favorite")
-    public ResponseEntity<List<Route>> getFavorite(@RequestHeader("username") String username){
-        List<Route> favoriteList = routeService.getByFavorite(username);
+    public ResponseEntity<List<PublicRoute>> getFavorite(@RequestHeader("username") String username){
+        List<PublicRoute> favoriteList = routeService.getByFavorite(username);
         if (favoriteList.isEmpty()){
             return ResponseEntity.status(204).build();
         } else {
@@ -58,11 +59,11 @@ public class RouteController {
 
     @PatchMapping("/favorite/{id}")
     public ResponseEntity<String> toggleFavorite(@RequestHeader("username") String username, @PathVariable Long id){
-        Optional<Route> optionalRoute = routeService.getById(id);
+        Optional<PublicRoute> optionalRoute = routeService.getById(id);
         if (optionalRoute.isEmpty()){
             return ResponseEntity.status(404).body("Could not find route with id " + id);
         } else {
-            Route exisingRoute = optionalRoute.get();
+            PublicRoute exisingRoute = optionalRoute.get();
             if (exisingRoute.getFavorite()){
                 exisingRoute.setFavorite(false);
                 routeService.updateFavorit(exisingRoute);

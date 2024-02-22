@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-//TODO test class
-public class ResponseDTO {
-    private WalkingRouteDTO walkingRouteDTO;
-
+public class PublicRoutes {
+    private List<PublicRoute> publicRoutes;
 }
