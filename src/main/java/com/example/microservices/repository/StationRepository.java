@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StationRepository extends JpaRepository<Station, Long> {
 
-    public Station findStationByNameEqualsIgnoreCase(String name);
+    public Station findDistinctFirstByNameEqualsIgnoreCase(String name);
 
 }
