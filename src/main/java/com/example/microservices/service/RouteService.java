@@ -41,12 +41,15 @@ public class RouteService {
 
 
     //TODO Work in progress getting error
-    public ResponseEntity<WalkingRouteDTO> getWalkingRoute(String startLoc, String dest){
+    public WalkingRouteDTO getWalkingRoute(String startLoc, String dest){
         ResponseEntity<WalkingRouteDTO> responseEntity = restTemplate
                 .getForEntity("http://localhost:8081/api/v1/routes/foot/" + startLoc + "/" + dest, WalkingRouteDTO.class);
 
-        WalkingRouteDTO walkingRoutesDTO = responseEntity.getBody();
-        return ResponseEntity.status(200).body(walkingRoutesDTO);
+        WalkingRouteDTO walkingRoutesDTO = new WalkingRouteDTO();
+        System.out.println(responseEntity.getBody().getTime());
+        walkingRoutesDTO.setTime(responseEntity.getBody().getTime());
+        walkingRoutesDTO.setDistance(responseEntity.getBody().getDistance());
+        return walkingRoutesDTO;
     }
 
 

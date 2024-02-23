@@ -2,6 +2,7 @@ package com.example.microservices.controller;
 
 import com.example.microservices.model.PublicRoute;
 import com.example.microservices.model.PublicRoutes;
+import com.example.microservices.model.PublicWalkRoute;
 import com.example.microservices.model.RouteRequestDTO;
 import com.example.microservices.service.RouteService;
 import com.example.microservices.service.StationService;
@@ -38,7 +39,10 @@ public class RouteController {
         //Kolla om start eller slut destination inte är en station
         if (!stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest())){
             //Om den inte hittar en station, skicka api till enskild transport och hämta gå tid
-            routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest());
+            PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
+            publicWalkRoute.setWalkingRouteDTO(routeService.getWalkingRoute(requestDTO.getStartPos(),
+                    requestDTO.getDest()));
+            System.out.println(publicWalkRoute.getWalkingRouteDTO());
 
         }
 
