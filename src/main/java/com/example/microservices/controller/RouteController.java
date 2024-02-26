@@ -48,7 +48,8 @@ public class RouteController {
 
         }
 
-        //Annars ge rutt
+        //Annars ge rutt. TODO koppla ihop förseningar med rutter. Om försening gör att tid för resa överstiger tiden att
+        // TODO promenera ska gå-rutt föreslås
             PublicRoutes publicRoutes = new PublicRoutes();
             publicRoutes.setPublicRoutes(routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest()));
             return ResponseEntity.status(200).body(publicRoutes);
