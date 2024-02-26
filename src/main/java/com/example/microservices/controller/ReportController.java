@@ -1,8 +1,10 @@
 package com.example.microservices.controller;
 
+import com.example.microservices.model.DTOs.ReportDTO;
 import com.example.microservices.model.Report.Report;
 import com.example.microservices.model.Report.Reports;
 import com.example.microservices.service.ReportService;
+import com.example.microservices.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +17,20 @@ public class ReportController {
 
     @Autowired
     private ReportService reportService;
+    @Autowired
+    RouteService routeService;
+
     @PostMapping
-    public ResponseEntity<String> addReport(@RequestBody Report report) {
-        if (report.getDescription().isEmpty()) {
+    public ResponseEntity<String> addReport(@RequestBody ReportDTO reportDTO) {
+        if (reportDTO.getDescription().isEmpty()) {
             return ResponseEntity.status(400).body("Report must contain description");
-        } else if (report.getDelay() == null) {
-            report.setDelay(0);
         }
+        Report report = new Report();
+        report.setDescription(reportDTO.getDescription());
+        report.setDelay(reportDTO.getDelay());
+        routeService.getById(reportDTO.getRouteId()).ifPresent(report::setRoute);
         reportService.addReport(report);
+
         return ResponseEntity.status(201).body("Report Added");
     }
 
