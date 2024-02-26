@@ -54,10 +54,15 @@ public class RouteController {
     }
 
     @GetMapping("/delay/{id}")
-    public Integer getDelay(@PathVariable int id){
+    public ResponseEntity<Integer> getDelay(@PathVariable int id){
         Reports reports = reportController.getReports().getBody();
-        Report report = reports.getReports().get(id - 1);
-        return report.getDelay();
+        assert reports != null;
+        try {
+            Report report = reports.getReports().get(id - 1);
+            return ResponseEntity.status(200).body(report.getDelay());
+        } catch (IndexOutOfBoundsException e){
+            return ResponseEntity.status(404).build();
+        }
     }
 
     @GetMapping("/favorite")
