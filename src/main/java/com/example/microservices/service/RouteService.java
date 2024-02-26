@@ -39,7 +39,7 @@ public class RouteService {
 
 
 
-    //TODO Work in progress getting error
+    //TODO Work in progress getting error. Need to change so that walking time is fetched from api
     public WalkingRouteDTO getWalkingRoute(String startLoc, String dest){
         ResponseEntity<WalkingRouteDTO> responseEntity = restTemplate
                 .getForEntity("http://localhost:8081/api/v1/routes/foot/" + startLoc + "/" + dest, WalkingRouteDTO.class);
