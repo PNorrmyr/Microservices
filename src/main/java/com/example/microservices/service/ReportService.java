@@ -1,7 +1,6 @@
 package com.example.microservices.service;
 
-import com.example.microservices.model.Report;
-import com.example.microservices.model.Reports;
+import com.example.microservices.model.Report.Report;
 import com.example.microservices.repository.ReportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

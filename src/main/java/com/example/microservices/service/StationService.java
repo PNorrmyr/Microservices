@@ -1,11 +1,9 @@
 package com.example.microservices.service;
 
-import com.example.microservices.model.Station;
+import com.example.microservices.model.Station.Station;
 import com.example.microservices.repository.StationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class StationService {

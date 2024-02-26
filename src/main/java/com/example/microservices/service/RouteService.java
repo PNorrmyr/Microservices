@@ -1,7 +1,7 @@
 package com.example.microservices.service;
 
 import com.example.microservices.model.PublicRoute;
-import com.example.microservices.model.WalkingRouteDTO;
+import com.example.microservices.model.DTOs.WalkingRouteDTO;
 import com.example.microservices.repository.RouteRespository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

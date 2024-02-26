@@ -1,8 +1,8 @@
 package com.example.microservices;
 
 import com.example.microservices.model.PublicRoute;
-import com.example.microservices.model.Station;
-import com.example.microservices.model.StationTypes;
+import com.example.microservices.model.Station.Station;
+import com.example.microservices.model.Station.StationTypes;
 import com.example.microservices.repository.RouteRespository;
 import com.example.microservices.repository.StationRepository;
 import jakarta.annotation.PostConstruct;

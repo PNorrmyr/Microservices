@@ -1,9 +1,11 @@
 package com.example.microservices.controller;
 
 import com.example.microservices.model.*;
+import com.example.microservices.model.DTOs.RouteRequestDTO;
+import com.example.microservices.model.Report.Report;
+import com.example.microservices.model.Report.Reports;
 import com.example.microservices.service.RouteService;
 import com.example.microservices.service.StationService;
-import jakarta.persistence.Index;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

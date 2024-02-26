@@ -1,4 +1,4 @@
-package com.example.microservices.model;
+package com.example.microservices.model.DTOs;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
