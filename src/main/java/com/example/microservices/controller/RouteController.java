@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,17 +41,31 @@ public class RouteController {
     public ResponseEntity<PublicRoutes> getPublicRoute(@RequestBody RouteRequestDTO requestDTO) {
 
         //Kolla om start eller slut destination inte är en station
-        if (!stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest())){
+/*        if (!stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest())){
             //Om den inte hittar en station, skicka api till enskild transport och hämta gå tid
             PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
             publicWalkRoute.setWalkingRouteDTO(routeService.getWalkingRoute(requestDTO.getStartPos(),
                     requestDTO.getDest()));
             System.out.println(publicWalkRoute.getWalkingRouteDTO());
 
-        }
+        }*/
 
         //Annars ge rutt. TODO koppla ihop förseningar med rutter. Om försening gör att tid för resa överstiger tiden att
         // TODO promenera ska gå-rutt föreslås
+
+        //Få fram den längsta möjliga försening på linjen. TODO Måste flytta ut denna från metoden
+            PublicRoute publicRoute = new PublicRoute();
+
+            ArrayList<Integer> delays = new ArrayList<>();
+            for (Report r: publicRoute.getReports()) {
+                delays.add(r.getDelay());
+            }
+
+            //TODO
+            int maxDelay = Collections.max(delays);
+            System.out.println(maxDelay);
+
+
             PublicRoutes publicRoutes = new PublicRoutes();
             publicRoutes.setPublicRoutes(routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest()));
             return ResponseEntity.status(200).body(publicRoutes);
