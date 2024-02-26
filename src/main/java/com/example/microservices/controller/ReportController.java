@@ -42,11 +42,12 @@ public class ReportController {
 
     @GetMapping()
     public ResponseEntity<Reports> getReports(){
-        Reports reportList = reportService.getAllReports();
-        if (reportList.getReports().isEmpty()){
+        List<Report> reportList = reportService.getAllReports();
+        Reports reports = new Reports(reportList);
+        if (reports.getReports().isEmpty()){
             return ResponseEntity.status(204).build();
         } else {
-            return ResponseEntity.status(200).body(reportList);
+            return ResponseEntity.status(200).body(reports);
         }
     }
 

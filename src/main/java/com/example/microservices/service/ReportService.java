@@ -37,8 +37,8 @@ public class ReportService {
        return true;
     }
 
-    public Reports getAllReports(){
-        return (Reports) reportRepository.findAll();
+    public List<Report> getAllReports(){
+        return reportRepository.findAll();
     }
 
 
