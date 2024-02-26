@@ -1,5 +1,6 @@
 package com.example.microservices.model.Report;
 
+import com.example.microservices.model.PublicRoute;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,10 @@ public class Report {
 
     @Column(columnDefinition = "integer default 0")
     private Integer delay = 0;
+
+    @ManyToOne
+    @JoinColumn(name = "routeId")
+    private PublicRoute route;
 
 
 }

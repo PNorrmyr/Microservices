@@ -31,7 +31,7 @@ public class MicroservicesApplication {
     }
     public void addRoute(){
         routeRespository.save(new PublicRoute(1l, "Krukmakargatan 1", "Odenplan",
-                "16:04", "16:20", 0, "16", false ));
+                "16:04", "16:20", 0, "16", false));
         routeRespository.save(new PublicRoute(2l, "Vasastaden", "centralstation",
                 "08:12", "08:46", 1, "34", true ));
         routeRespository.save(new PublicRoute(3l, "Vasastaden", "centralstation",
