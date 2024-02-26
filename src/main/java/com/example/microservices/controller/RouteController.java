@@ -72,11 +72,11 @@ public class RouteController {
             PublicRoute exisingRoute = optionalRoute.get();
             if (exisingRoute.getFavorite()){
                 exisingRoute.setFavorite(false);
-                routeService.updateFavorit(exisingRoute);
+                routeService.updateFavorite(exisingRoute);
                 return ResponseEntity.status(200).body("Route was unmarked from favorites");
             } else {
                 exisingRoute.setFavorite(true);
-                routeService.updateFavorit(exisingRoute);
+                routeService.updateFavorite(exisingRoute);
                 return ResponseEntity.status(200).body("Route was marked as favorite");
             }
         }

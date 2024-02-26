@@ -1,7 +1,6 @@
 package com.example.microservices.service;
 
 import com.example.microservices.model.PublicRoute;
-import com.example.microservices.model.PublicRoutes;
 import com.example.microservices.model.WalkingRouteDTO;
 import com.example.microservices.repository.RouteRespository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class RouteService {
         return routeRespository.findById(Id);
     }
 
-    public void updateFavorit(PublicRoute route){
+    public void updateFavorite(PublicRoute route){
         routeRespository.save(route);
     }
 
@@ -46,8 +45,8 @@ public class RouteService {
                 .getForEntity("http://localhost:8081/api/v1/routes/foot/" + startLoc + "/" + dest, WalkingRouteDTO.class);
 
         WalkingRouteDTO walkingRoutesDTO = new WalkingRouteDTO();
-        System.out.println(responseEntity.getBody().getTime());
-        walkingRoutesDTO.setTime(responseEntity.getBody().getTime());
+        System.out.println(responseEntity.getBody().getTimeOfArrival());
+        walkingRoutesDTO.setTimeOfArrival(responseEntity.getBody().getTimeOfArrival());
         walkingRoutesDTO.setDistance(responseEntity.getBody().getDistance());
         return walkingRoutesDTO;
     }
