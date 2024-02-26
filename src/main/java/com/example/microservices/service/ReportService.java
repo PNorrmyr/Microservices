@@ -1,6 +1,7 @@
 package com.example.microservices.service;
 
 import com.example.microservices.model.Report;
+import com.example.microservices.model.Reports;
 import com.example.microservices.repository.ReportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -36,8 +37,8 @@ public class ReportService {
        return true;
     }
 
-    public List<Report> getAllReports(){
-        return reportRepository.findAll();
+    public Reports getAllReports(){
+        return (Reports) reportRepository.findAll();
     }
 
 

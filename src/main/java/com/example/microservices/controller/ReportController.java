@@ -1,6 +1,7 @@
 package com.example.microservices.controller;
 
 import com.example.microservices.model.Report;
+import com.example.microservices.model.Reports;
 import com.example.microservices.service.ReportService;
 import com.example.microservices.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +41,9 @@ public class ReportController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Report>> getReports(){
-        List<Report> reportList = reportService.getAllReports();
-        if (reportList.isEmpty()){
+    public ResponseEntity<Reports> getReports(){
+        Reports reportList = reportService.getAllReports();
+        if (reportList.getReports().isEmpty()){
             return ResponseEntity.status(204).build();
         } else {
             return ResponseEntity.status(200).body(reportList);

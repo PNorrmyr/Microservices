@@ -1,9 +1,6 @@
 package com.example.microservices.controller;
 
-import com.example.microservices.model.PublicRoute;
-import com.example.microservices.model.PublicRoutes;
-import com.example.microservices.model.PublicWalkRoute;
-import com.example.microservices.model.RouteRequestDTO;
+import com.example.microservices.model.*;
 import com.example.microservices.service.RouteService;
 import com.example.microservices.service.StationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +21,8 @@ public class RouteController {
     private StationService stationService;
     @Autowired
     RestTemplate restTemplate;
+    @Autowired
+    ReportController reportController;
 
 
 
@@ -50,6 +49,13 @@ public class RouteController {
             PublicRoutes publicRoutes = new PublicRoutes();
             publicRoutes.setPublicRoutes(routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest()));
             return ResponseEntity.status(200).body(publicRoutes);
+
+    }
+
+    @GetMapping("/delays")
+    public void getDelay(){
+
+
 
     }
 
