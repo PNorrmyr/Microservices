@@ -50,7 +50,9 @@ public class RouteController {
             System.out.println("Ingen station, går via API för att hämta tid");
             Route walkingRoute = routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest());
             publicRoute.setTravelTime(walkingRoute.getTime());
+            publicRoute.setId(walkingRoute.getId());
             publicWalkRoute.setPublicRoute(publicRoute);
+
 
             return ResponseEntity.status(200).body(publicWalkRoute);
         } else {
