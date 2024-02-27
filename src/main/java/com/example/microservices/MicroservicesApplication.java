@@ -43,6 +43,12 @@ public class MicroservicesApplication {
                 "12:40", "12:43", 0, 3d, false ));
         routeRespository.save(new PublicRoute(5l, "Rådmansgatan", "Ropsten",
                 "11:20", "11:26", 0, 6d, false ));
+        routeRespository.save(new PublicRoute(5l, "Hötorget", "Ropsten",
+                "11:20", "11:26", 0, 6d, false ));
+        routeRespository.save(new PublicRoute(5l, "Ropsten", "Hötorget",
+                "11:20", "11:26", 0, 6d, false ));
+
+
     }
 
     @PostConstruct
