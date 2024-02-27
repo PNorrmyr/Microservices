@@ -31,14 +31,14 @@ public class PublicRoute {
 
     private int numberOfSwaps;
 
-    private String travelTime;
+    private double travelTime;
 
     private Boolean favorite;
 
     @OneToMany(mappedBy = "route")
     private List<Report> reports;
 
-    public PublicRoute(Long id, String startLoc, String endLoc, String departTime, String arrival, int numberOfSwaps, String travelTime, Boolean favorite) {
+    public PublicRoute(Long id, String startLoc, String endLoc, String departTime, String arrival, int numberOfSwaps, double travelTime, Boolean favorite) {
         this.Id = id;
         this.startLoc = startLoc;
         this.endLoc = endLoc;

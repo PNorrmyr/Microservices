@@ -51,7 +51,7 @@ public class RouteController {
             System.out.println(walkingRoute);
 
             walkingRouteDTO.setTravelTime(walkingRoute.getTime());
-            publicRoute.setTravelTime(String.valueOf(walkingRouteDTO.getTravelTime()));
+            publicRoute.setTravelTime(walkingRouteDTO.getTravelTime());
 
             return ResponseEntity.status(200).body(publicRoute);
         }
@@ -60,21 +60,22 @@ public class RouteController {
         // TODO promenera ska gå-rutt föreslås
 
         //Få fram den längsta möjliga försening på linjen. TODO Måste flytta ut denna från metoden
- /*           PublicRoute publicRoute = new PublicRoute();
 
+            PublicRoute publicRoute1 = routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest());
             ArrayList<Integer> delays = new ArrayList<>();
+            System.out.println(publicRoute1.getReports());
             for (Report r: publicRoute.getReports()) {
                 delays.add(r.getDelay());
             }
 
             //TODO
-            int maxDelay = Collections.max(delays);
-            System.out.println(maxDelay);*/
+            double maxDelay = Collections.max(delays);
+            System.out.println(maxDelay);
+            double delayedTravelTime = maxDelay + publicRoute1.getTravelTime();
 
-            PublicRoute publicRoute1 = routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest());
+            if (delayedTravelTime > walkingRouteDTO.getTravelTime()){
 
-
-
+            }
 
             return ResponseEntity.status(200).body(publicRoute1);
 
