@@ -1,6 +1,5 @@
 package com.example.microservices.model;
 
-import com.example.microservices.model.DTOs.WalkingRouteDTO;
 import com.example.microservices.model.RouteAPI.Route;
 import lombok.AllArgsConstructor;
 import lombok.Data;

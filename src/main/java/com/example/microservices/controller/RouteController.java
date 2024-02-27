@@ -2,7 +2,6 @@ package com.example.microservices.controller;
 
 import com.example.microservices.model.*;
 import com.example.microservices.model.DTOs.RouteRequestDTO;
-import com.example.microservices.model.DTOs.WalkingRouteDTO;
 import com.example.microservices.model.Report.Report;
 import com.example.microservices.model.Report.Reports;
 import com.example.microservices.model.RouteAPI.Route;
