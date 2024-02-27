@@ -46,17 +46,16 @@ public class RouteController {
         PublicRoute publicRoute = new PublicRoute();
         PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
         //Kolla om start eller slut destination inte är en station, om inte, skicka till API och returnera gå tid
-        if (stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest())){
+        System.out.println(stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest()));
+        if (!stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest())){
             System.out.println("Ingen station går via API för att hämta tid");
             Route walkingRoute = routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest());
             publicRoute.setTravelTime(walkingRoute.getTime());
             publicWalkRoute.setPublicRoute(publicRoute);
 
             return ResponseEntity.status(200).body(publicWalkRoute);
-        }
-
-
-        //Få fram den längsta möjliga försening på linjen.
+        } else {
+            //Få fram den längsta möjliga försening på linjen.
             publicRoute = routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest());
             ArrayList<Integer> delays = new ArrayList<>();
 
@@ -64,16 +63,15 @@ public class RouteController {
             double maxDelay;
             double delayedTravelTime;
 
-
             if (!publicRoute.getReports().isEmpty()) {
-                for (Report r: publicRoute.getReports()) {
+                for (Report r : publicRoute.getReports()) {
                     delays.add(r.getDelay());
                 }
                 maxDelay = Collections.max(delays);
                 delayedTravelTime = maxDelay + publicRoute.getTravelTime();
 
                 //Om total restid med delay är längre än tiden att gå, returnera en gå rutt
-                if (delayedTravelTime > publicRoute.getTravelTime()){
+                if (delayedTravelTime > publicRoute.getTravelTime()) {
                     System.out.println("Hämtar gå rutt delay är större än gå-tid");
                     Route walkingRoute = routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest());
                     publicWalkRoute.setWalkingRoute(walkingRoute);
@@ -85,8 +83,8 @@ public class RouteController {
             System.out.println("Hämtar kommunal rutt");
             publicWalkRoute.setPublicRoute(publicRoute);
 
-
             return ResponseEntity.status(200).body(publicWalkRoute);
+        }
 
     }
 

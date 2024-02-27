@@ -51,8 +51,8 @@ public class RouteService {
 
 
     public PublicRoute getPublicRoute(String startPos, String dest){
-        routeRespository.findFirstByStartLocEqualsIgnoreCaseAndEndLocContainsIgnoreCase(startPos, dest);
-        return routeRespository.findFirstByStartLocEqualsIgnoreCaseAndEndLocContainsIgnoreCase(startPos, dest);
+        System.out.println(routeRespository.findDistinctByStartLocEqualsIgnoreCaseAndEndLocContainsIgnoreCase(startPos, dest));
+        return routeRespository.findDistinctByStartLocEqualsIgnoreCaseAndEndLocContainsIgnoreCase(startPos, dest);
 
     }
 }
