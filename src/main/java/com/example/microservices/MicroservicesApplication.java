@@ -43,8 +43,7 @@ public class MicroservicesApplication {
                 "11:20", "11:26", 0, 6d, false ));
     }
 
-    @PostConstruct
-    public void init(){
+    @PostConstruct    public void init(){
         addStation();
         addRoute();
     }
