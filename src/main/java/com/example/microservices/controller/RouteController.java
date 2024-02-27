@@ -48,7 +48,7 @@ public class RouteController {
         //Kolla om start eller slut destination inte är en station, om inte, skicka till API och returnera gå tid
         System.out.println(stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest()));
         if (!stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest())){
-            System.out.println("Ingen station går via API för att hämta tid");
+            System.out.println("Ingen station, går via API för att hämta tid");
             Route walkingRoute = routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest());
             publicRoute.setTravelTime(walkingRoute.getTime());
             publicWalkRoute.setPublicRoute(publicRoute);
