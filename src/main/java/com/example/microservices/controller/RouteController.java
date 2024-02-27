@@ -4,7 +4,9 @@ import com.example.microservices.model.*;
 import com.example.microservices.model.DTOs.RouteRequestDTO;
 import com.example.microservices.model.Report.Report;
 import com.example.microservices.model.Report.Reports;
+import com.example.microservices.model.RouteAPI.Coordinates;
 import com.example.microservices.model.RouteAPI.Route;
+import com.example.microservices.model.Station.Station;
 import com.example.microservices.service.RouteService;
 import com.example.microservices.service.StationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/public-transport/routes")
@@ -45,12 +44,37 @@ public class RouteController {
         PublicRoute publicRoute = new PublicRoute();
         PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
         //Kolla om start eller slut destination inte är en station, om inte, skicka till API och returnera gå tid
-        System.out.println(stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest()));
         if (!stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest())){
             System.out.println("Ingen station, går via API för att hämta tid");
+
+            //Startpos är INTE station, dest är station
+            if (stationService.getByName(requestDTO.getStartPos()) == null){
+
+                Route route = routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest());
+                Coordinates startCoord = route.getStartCoords();
+
+                Map<Double, Station> coordinateDist = new HashMap<>();
+                for (Station station : stationService.findAll()) {
+                    coordinateDist.put(startCoord.getDistance(station.getCoords()), station);
+                }
+                double minDistance = Collections.min(coordinateDist.keySet());
+
+                Station dest = coordinateDist.get(minDistance);
+                Route walkingroute = routeService.getWalkingRoute(requestDTO.getStartPos(), dest.getCoords().asString());
+
+                publicRoute = routeService.getPublicRoute(dest.getName(), requestDTO.getDest());
+
+                publicWalkRoute.setWalkingRoute(walkingroute);
+                publicWalkRoute.setPublicRoute(publicRoute);
+                return ResponseEntity.ok(publicWalkRoute);
+
+            }/* else if (stationService.getByName(requestDTO.getDest()) == null) {
+                Route walkingroute =
+
+            }*/
             Route walkingRoute = routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest());
-            publicRoute.setTravelTime(walkingRoute.getTime());
-            publicRoute.setId(walkingRoute.getId());
+
+            publicWalkRoute.setWalkingRoute(walkingRoute);
             publicWalkRoute.setPublicRoute(publicRoute);
 
 
@@ -129,4 +153,6 @@ public class RouteController {
             }
         }
     }
+
+
 }

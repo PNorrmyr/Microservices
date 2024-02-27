@@ -11,4 +11,7 @@ public interface RouteRespository extends JpaRepository<PublicRoute, Long> {
     public List<PublicRoute> findAllByFavoriteIsTrue();
 
     public PublicRoute findDistinctByStartLocEqualsIgnoreCaseAndEndLocContainsIgnoreCase(String startLoc, String endLoc);
+
+    public List<PublicRoute> findAllByStartLoc(String startLoc);
+    public List<PublicRoute> findAllByEndLoc(String endLoc);
 }

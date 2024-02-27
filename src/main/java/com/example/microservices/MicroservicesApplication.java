@@ -11,6 +11,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
+import com.example.microservices.model.RouteAPI.Coordinates;
 
 @SpringBootApplication
 public class MicroservicesApplication {
@@ -22,12 +23,13 @@ public class MicroservicesApplication {
 
 
     public void addStation(){
-        stationRepository.save(new Station(1l, "CentralStation", StationTypes.BUS));
+/*        stationRepository.save(new Station(1l, "CentralStation", StationTypes.BUS));
         stationRepository.save(new Station(2l, "Vasastaden", StationTypes.BUS));
         stationRepository.save(new Station(3l, "Odenplan", StationTypes.TRAIN));
         stationRepository.save(new Station(4l, "Rådmansgatan", StationTypes.TRAIN));
-        stationRepository.save(new Station(5l, "St Eriksplan", StationTypes.TRAIN));
-        stationRepository.save(new Station(6l, "Hötorget", StationTypes.TRAIN));
+        stationRepository.save(new Station(5l, "St Eriksplan", StationTypes.TRAIN));*/
+        stationRepository.save(new Station(6l, "Hötorget", new Coordinates(59.3358309d, 18.0632652d), StationTypes.TRAIN));
+        stationRepository.save(new Station(7l, "Ropsten", new Coordinates(59.3573561d, 18.1023962d), StationTypes.TRAIN));
 
     }
     public void addRoute(){
@@ -39,11 +41,12 @@ public class MicroservicesApplication {
                 "09:40", "10:05", 3, 25d, false ));
         routeRespository.save(new PublicRoute(4l, "Odenplan", "Hötorget",
                 "12:40", "12:43", 0, 3d, false ));
-        routeRespository.save(new PublicRoute(5l, "Rådmansgatan", "St Eriksplan",
+        routeRespository.save(new PublicRoute(5l, "Rådmansgatan", "Ropsten",
                 "11:20", "11:26", 0, 6d, false ));
     }
 
-    @PostConstruct    public void init(){
+    @PostConstruct
+    public void init(){
         addStation();
         addRoute();
     }

@@ -16,6 +16,8 @@ public class Route {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
+    @Transient
+    final Coordinates startCoords,stopCoords;
     final TypeOfTravel typeOfTravel;
     final Double distance;
     final Double time;
@@ -23,6 +25,7 @@ public class Route {
     final String stop;
     @ElementCollection
     List<String> waypoints;
+
 
 
 }

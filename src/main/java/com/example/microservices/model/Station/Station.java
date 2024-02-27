@@ -1,5 +1,6 @@
 package com.example.microservices.model.Station;
 
+import com.example.microservices.model.RouteAPI.Coordinates;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +18,9 @@ public class Station {
     private Long Id;
 
     private String name;
+
+    @Embedded
+    private Coordinates Coords;
 
     @Enumerated(EnumType.STRING)
     private StationTypes type;

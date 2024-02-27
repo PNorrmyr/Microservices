@@ -50,7 +50,6 @@ public class RouteService {
 
 
     public PublicRoute getPublicRoute(String startPos, String dest){
-        System.out.println(routeRespository.findDistinctByStartLocEqualsIgnoreCaseAndEndLocContainsIgnoreCase(startPos, dest));
         return routeRespository.findDistinctByStartLocEqualsIgnoreCaseAndEndLocContainsIgnoreCase(startPos, dest);
 
     }
