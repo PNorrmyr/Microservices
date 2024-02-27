@@ -33,6 +33,7 @@ public class RouteController {
 
 
 
+
     public RouteController(RouteService routeService){
         this.routeService = routeService;
     }
@@ -40,44 +41,52 @@ public class RouteController {
 
     //TODO Work in progress
     @PostMapping
-    public ResponseEntity<PublicRoute> getPublicRoute(@RequestBody RouteRequestDTO requestDTO) {
+    public ResponseEntity<PublicWalkRoute> getPublicRoute(@RequestBody RouteRequestDTO requestDTO) {
 
         PublicRoute publicRoute = new PublicRoute();
-        WalkingRouteDTO walkingRouteDTO = new WalkingRouteDTO();
-        //Kolla om start eller slut destination inte är en station
+        PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
+        //Kolla om start eller slut destination inte är en station, om inte, skicka till API och returnera gå tid
         if (stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest())){
-            //Om den inte hittar en station, skicka api till enskild transport och hämta gå tid
+            System.out.println("Ingen station går via API för att hämta tid");
             Route walkingRoute = routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest());
-            System.out.println(walkingRoute);
+            publicRoute.setTravelTime(walkingRoute.getTime());
+            publicWalkRoute.setPublicRoute(publicRoute);
 
-            walkingRouteDTO.setTravelTime(walkingRoute.getTime());
-            publicRoute.setTravelTime(walkingRouteDTO.getTravelTime());
-
-            return ResponseEntity.status(200).body(publicRoute);
+            return ResponseEntity.status(200).body(publicWalkRoute);
         }
 
-        //Annars ge rutt. TODO koppla ihop förseningar med rutter. Om försening gör att tid för resa överstiger tiden att
-        // TODO promenera ska gå-rutt föreslås
 
-        //Få fram den längsta möjliga försening på linjen. TODO Måste flytta ut denna från metoden
-
-            PublicRoute publicRoute1 = routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest());
+        //Få fram den längsta möjliga försening på linjen.
+            publicRoute = routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest());
             ArrayList<Integer> delays = new ArrayList<>();
-            System.out.println(publicRoute1.getReports());
-            for (Report r: publicRoute.getReports()) {
-                delays.add(r.getDelay());
+
+            //Hittar max delay om reports finns tillgänglig
+            double maxDelay;
+            double delayedTravelTime;
+
+
+            if (!publicRoute.getReports().isEmpty()) {
+                for (Report r: publicRoute.getReports()) {
+                    delays.add(r.getDelay());
+                }
+                maxDelay = Collections.max(delays);
+                delayedTravelTime = maxDelay + publicRoute.getTravelTime();
+
+                //Om total restid med delay är längre än tiden att gå, returnera en gå rutt
+                if (delayedTravelTime > publicRoute.getTravelTime()){
+                    System.out.println("Hämtar gå rutt delay är större än gå-tid");
+                    Route walkingRoute = routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest());
+                    publicWalkRoute.setWalkingRoute(walkingRoute);
+                }
+                return ResponseEntity.status(200).body(publicWalkRoute);
             }
 
-            //TODO
-            double maxDelay = Collections.max(delays);
-            System.out.println(maxDelay);
-            double delayedTravelTime = maxDelay + publicRoute1.getTravelTime();
+            //Sätter kommunal rutt om bägge destinationer är Stationer och
+            System.out.println("Hämtar kommunal rutt");
+            publicWalkRoute.setPublicRoute(publicRoute);
 
-            if (delayedTravelTime > walkingRouteDTO.getTravelTime()){
 
-            }
-
-            return ResponseEntity.status(200).body(publicRoute1);
+            return ResponseEntity.status(200).body(publicWalkRoute);
 
     }
 

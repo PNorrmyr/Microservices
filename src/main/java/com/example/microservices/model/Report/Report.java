@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table (name = "Report")
+@ToString
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,7 +28,7 @@ public class Report {
     @Column(columnDefinition = "integer default 0")
     private Integer delay = 0;
 
-
+    @ToString.Exclude
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne
     @JoinColumn(name = "routeId")
