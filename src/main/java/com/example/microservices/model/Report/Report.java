@@ -1,6 +1,8 @@
 package com.example.microservices.model.Report;
 
 import com.example.microservices.model.PublicRoute;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +26,8 @@ public class Report {
     @Column(columnDefinition = "integer default 0")
     private Integer delay = 0;
 
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne
     @JoinColumn(name = "routeId")
     private PublicRoute route;

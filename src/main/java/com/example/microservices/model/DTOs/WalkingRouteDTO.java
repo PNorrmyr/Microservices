@@ -10,5 +10,5 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Data
 public class WalkingRouteDTO {
-    private Long distance;
-    private LocalTime timeOfArrival;} //Jag ska få tillbaks gå-tiden från api
+    private double travelTime;
+}

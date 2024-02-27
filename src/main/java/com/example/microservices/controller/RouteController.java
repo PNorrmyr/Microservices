@@ -2,8 +2,10 @@ package com.example.microservices.controller;
 
 import com.example.microservices.model.*;
 import com.example.microservices.model.DTOs.RouteRequestDTO;
+import com.example.microservices.model.DTOs.WalkingRouteDTO;
 import com.example.microservices.model.Report.Report;
 import com.example.microservices.model.Report.Reports;
+import com.example.microservices.model.RouteAPI.Route;
 import com.example.microservices.service.RouteService;
 import com.example.microservices.service.StationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,23 +40,27 @@ public class RouteController {
 
     //TODO Work in progress
     @PostMapping
-    public ResponseEntity<PublicRoutes> getPublicRoute(@RequestBody RouteRequestDTO requestDTO) {
+    public ResponseEntity<PublicRoute> getPublicRoute(@RequestBody RouteRequestDTO requestDTO) {
 
+        PublicRoute publicRoute = new PublicRoute();
+        WalkingRouteDTO walkingRouteDTO = new WalkingRouteDTO();
         //Kolla om start eller slut destination inte är en station
-/*        if (!stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest())){
+        if (stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest())){
             //Om den inte hittar en station, skicka api till enskild transport och hämta gå tid
-            PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
-            publicWalkRoute.setWalkingRouteDTO(routeService.getWalkingRoute(requestDTO.getStartPos(),
-                    requestDTO.getDest()));
-            System.out.println(publicWalkRoute.getWalkingRouteDTO());
+            Route walkingRoute = routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest());
+            System.out.println(walkingRoute);
 
-        }*/
+            walkingRouteDTO.setTravelTime(walkingRoute.getTime());
+            publicRoute.setTravelTime(String.valueOf(walkingRouteDTO.getTravelTime()));
+
+            return ResponseEntity.status(200).body(publicRoute);
+        }
 
         //Annars ge rutt. TODO koppla ihop förseningar med rutter. Om försening gör att tid för resa överstiger tiden att
         // TODO promenera ska gå-rutt föreslås
 
         //Få fram den längsta möjliga försening på linjen. TODO Måste flytta ut denna från metoden
-            PublicRoute publicRoute = new PublicRoute();
+ /*           PublicRoute publicRoute = new PublicRoute();
 
             ArrayList<Integer> delays = new ArrayList<>();
             for (Report r: publicRoute.getReports()) {
@@ -63,12 +69,14 @@ public class RouteController {
 
             //TODO
             int maxDelay = Collections.max(delays);
-            System.out.println(maxDelay);
+            System.out.println(maxDelay);*/
+
+            PublicRoute publicRoute1 = routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest());
 
 
-            PublicRoutes publicRoutes = new PublicRoutes();
-            publicRoutes.setPublicRoutes(routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest()));
-            return ResponseEntity.status(200).body(publicRoutes);
+
+
+            return ResponseEntity.status(200).body(publicRoute1);
 
     }
 

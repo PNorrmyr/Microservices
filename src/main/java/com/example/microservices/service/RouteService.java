@@ -2,6 +2,8 @@ package com.example.microservices.service;
 
 import com.example.microservices.model.PublicRoute;
 import com.example.microservices.model.DTOs.WalkingRouteDTO;
+import com.example.microservices.model.RouteAPI.ComputedRoute;
+import com.example.microservices.model.RouteAPI.Route;
 import com.example.microservices.repository.RouteRespository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,20 +42,17 @@ public class RouteService {
 
 
     //TODO Work in progress getting error. Need to change so that walking time is fetched from api
-    public WalkingRouteDTO getWalkingRoute(String startLoc, String dest){
-        ResponseEntity<WalkingRouteDTO> responseEntity = restTemplate
-                .getForEntity("http://localhost:8081/api/v1/routes/foot/" + startLoc + "/" + dest, WalkingRouteDTO.class);
+    public Route getWalkingRoute(String startLoc, String dest){
+        ResponseEntity<ComputedRoute> responseEntity = restTemplate
+                .getForEntity("https://tohemu23.azurewebsites.net/api/v1/routes/Foot/" + startLoc + "/" + dest, ComputedRoute.class);
 
-        WalkingRouteDTO walkingRoutesDTO = new WalkingRouteDTO();
-        System.out.println(responseEntity.getBody().getTimeOfArrival());
-        walkingRoutesDTO.setTimeOfArrival(responseEntity.getBody().getTimeOfArrival());
-        walkingRoutesDTO.setDistance(responseEntity.getBody().getDistance());
-        return walkingRoutesDTO;
+        return responseEntity.getBody().getRoute();
     }
 
 
-    public List<PublicRoute> getPublicRoute(String startPos, String dest){
-        return routeRespository.findAllByStartLocEqualsIgnoreCaseAndEndLocContainsIgnoreCase(startPos, dest);
+    public PublicRoute getPublicRoute(String startPos, String dest){
+        routeRespository.findFirstByStartLocEqualsIgnoreCaseAndEndLocContainsIgnoreCase(startPos, dest);
+        return routeRespository.findFirstByStartLocEqualsIgnoreCaseAndEndLocContainsIgnoreCase(startPos, dest);
 
     }
 }
