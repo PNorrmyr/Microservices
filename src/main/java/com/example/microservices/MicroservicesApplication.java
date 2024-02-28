@@ -26,8 +26,8 @@ public class MicroservicesApplication {
 /*        stationRepository.save(new Station(1l, "CentralStation", StationTypes.BUS));
         stationRepository.save(new Station(2l, "Vasastaden", StationTypes.BUS));
         stationRepository.save(new Station(3l, "Odenplan", StationTypes.TRAIN));
-        stationRepository.save(new Station(4l, "Rådmansgatan", StationTypes.TRAIN));
-        stationRepository.save(new Station(5l, "St Eriksplan", StationTypes.TRAIN));*/
+        stationRepository.save(new Station(4l, "Rådmansgatan", StationTypes.TRAIN));*/
+        stationRepository.save(new Station(5l, "St Eriksplan", new Coordinates(59.3394381d, 18.0369903d), StationTypes.TRAIN));
         stationRepository.save(new Station(6l, "Hötorget", new Coordinates(59.3358309d, 18.0632652d), StationTypes.TRAIN));
         stationRepository.save(new Station(7l, "Ropsten", new Coordinates(59.3573561d, 18.1023962d), StationTypes.TRAIN));
 

@@ -39,7 +39,7 @@ public class RouteController {
 
     //TODO Work in progress
     @PostMapping
-    public ResponseEntity<PublicWalkRoute> getPublicRoute(@RequestBody RouteRequestDTO requestDTO) {
+    public ResponseEntity<PublicWalkRoute> getPublicWalkRoute(@RequestBody RouteRequestDTO requestDTO) {
         PublicRoute publicRoute = new PublicRoute();
         PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
 
