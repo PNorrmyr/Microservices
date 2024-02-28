@@ -60,16 +60,16 @@ public class RouteController {
             //Kollar om rutt har förseningar och tar fram längsta möjliga försening på linjen
             publicRoute = routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest());
 
-            //Hittar max delay om reports finns tillgänglig
+            //Hittar delayedTravelTime om reports finns tillgänglig
             double maxDelay = maxDelay(publicRoute);
             double delayedTravelTime = delayedTravelTime(maxDelay, publicRoute);
 
-            //Om total restid med delay är längre än tiden att gå, returnera en gå rutt
+            //Om delayedTravelTime är längre än tiden att gå, returnera en gå rutt
             publicWalkRoute = delayedWalkRoute(delayedTravelTime, publicRoute, publicWalkRoute, requestDTO.getStartPos(), requestDTO.getDest());
             return ResponseEntity.status(200).body(publicWalkRoute);
             }
         }
-        //Sätter kommunal rutt om bägge destinationer är Stationer och
+        //Sätter kommunal rutt om bägge destinationer är Stationer
         System.out.println("Hämtar kommunal rutt");
         publicWalkRoute.setPublicRoute(publicRoute);
         return ResponseEntity.status(200).body(publicWalkRoute);
@@ -117,7 +117,7 @@ public class RouteController {
     }
 
     public PublicWalkRoute destIsStation(String start, String dest){
-        PublicRoute publicRoute = new PublicRoute();
+        PublicRoute publicRoute;
         PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
 
         Route route = routeService.getWalkingRoute(start, dest);
@@ -140,7 +140,7 @@ public class RouteController {
     }
 
     public PublicWalkRoute startIsStation(String start, String dest){
-        PublicRoute publicRoute = new PublicRoute();
+        PublicRoute publicRoute;
         PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
 
         Route route = routeService.getWalkingRoute(start, dest);

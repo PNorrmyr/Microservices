@@ -1,7 +1,6 @@
 package com.example.microservices.service;
 
 import com.example.microservices.model.PublicRoute;
-import com.example.microservices.model.RouteAPI.ComputedRoute;
 import com.example.microservices.model.RouteAPI.Route;
 import com.example.microservices.repository.RouteRespository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,13 +38,11 @@ public class RouteService {
     }
 
 
-
-    //TODO Work in progress getting error. Need to change so that walking time is fetched from api
     public Route getWalkingRoute(String startLoc, String dest){
-        ResponseEntity<ComputedRoute> responseEntity = restTemplate
-                .getForEntity("https://tohemu23.azurewebsites.net/api/v1/routes/Foot/" + startLoc + "/" + dest, ComputedRoute.class);
+        ResponseEntity<Route> responseEntity = restTemplate
+                .getForEntity("https://tohemu23.azurewebsites.net/api/v1/routes/Foot/" + startLoc + "/" + dest + "/raw", Route.class);
 
-        return responseEntity.getBody().getRoute();
+        return responseEntity.getBody();
     }
 
 
