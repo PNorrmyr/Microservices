@@ -48,7 +48,6 @@ public class RouteService {
 
     public PublicRoute getPublicRoute(String startPos, String dest){
         return routeRespository.findDistinctByStartLocEqualsIgnoreCaseAndEndLocContainsIgnoreCase(startPos, dest);
-
     }
 }
 

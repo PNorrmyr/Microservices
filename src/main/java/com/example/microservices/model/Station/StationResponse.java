@@ -15,5 +15,4 @@ public class StationResponse {
 
     private double dist;
 
-
 }

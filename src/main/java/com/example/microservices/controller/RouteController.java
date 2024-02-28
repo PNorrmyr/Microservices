@@ -44,7 +44,7 @@ public class RouteController {
 
     //TODO Work in progress
     @PostMapping
-    public ResponseEntity<PublicWalkRoute> getPublicWalkRoute(@RequestBody RouteRequestDTO requestDTO) {
+    public ResponseEntity<PublicWalkRoute> getPublicWalkRoute(@RequestHeader("username") String username, @RequestBody RouteRequestDTO requestDTO) {
         //Kolla om start eller slut destination inte är en station, om inte, skicka till API och returnera gå tid
         if (!stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest())){
             System.out.println("Ingen station, går via API för att hämta tid");
@@ -73,12 +73,13 @@ public class RouteController {
         }
         //Sätter kommunal rutt om bägge destinationer är Stationer
         System.out.println("Hämtar kommunal rutt");
+        publicRoute = routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest());
         publicWalkRoute.setPublicRoute(publicRoute);
         return ResponseEntity.status(200).body(publicWalkRoute);
     }
 
     @PostMapping("/stations")
-    public ResponseEntity<StationResponse> getClosestStation(@RequestBody Coordinates coordinates){
+    public ResponseEntity<StationResponse> getClosestStation(@RequestHeader("username") String username, @RequestBody Coordinates coordinates){
         Map<Double, Station> coordinateDist = new HashMap<>();
 
         for (Station station : stationService.findAll()) {
@@ -94,7 +95,7 @@ public class RouteController {
     }
 
     @GetMapping("/delay/{id}")
-    public ResponseEntity<Integer> getDelay(@PathVariable int id){
+    public ResponseEntity<Integer> getDelay(@RequestHeader("username") String username, @PathVariable int id){
         Reports reports = reportController.getReports().getBody();
         assert reports != null;
         try {
