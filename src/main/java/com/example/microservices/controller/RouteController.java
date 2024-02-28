@@ -40,9 +40,9 @@ public class RouteController {
     //TODO Work in progress
     @PostMapping
     public ResponseEntity<PublicWalkRoute> getPublicRoute(@RequestBody RouteRequestDTO requestDTO) {
-
         PublicRoute publicRoute = new PublicRoute();
         PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
+
         //Kolla om start eller slut destination inte är en station, om inte, skicka till API och returnera gå tid
         if (!stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest())){
             System.out.println("Ingen station, går via API för att hämta tid");
@@ -50,75 +50,28 @@ public class RouteController {
             //Startpos är INTE station, dest är station
             if (stationService.getByName(requestDTO.getStartPos()) == null){
                 System.out.println("Start INTE station");
+                return ResponseEntity.ok(destIsStation(requestDTO.getStartPos(), requestDTO.getDest()));
 
-                Route route = routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest());
-                Coordinates startCoord = route.getStartCoords();
-
-                Map<Double, Station> coordinateDist = new HashMap<>();
-                for (Station station : stationService.findAll()) {
-                    coordinateDist.put(startCoord.getDistance(station.getCoords()), station);
-                }
-                double minDistance = Collections.min(coordinateDist.keySet());
-
-                Station dest = coordinateDist.get(minDistance);
-                Route walkingroute = routeService.getWalkingRoute(requestDTO.getStartPos(), dest.getCoords().asString());
-
-                publicRoute = routeService.getPublicRoute(dest.getName(), requestDTO.getDest());
-
-                publicWalkRoute.setWalkingRoute(walkingroute);
-                publicWalkRoute.setPublicRoute(publicRoute);
-                return ResponseEntity.ok(publicWalkRoute);
-
-            } else if
-            //Startpos är station, dest är INTE station
-            (stationService.getByName(requestDTO.getDest()) == null) {
+            } else if (stationService.getByName(requestDTO.getDest()) == null) {
+                //Startpos är station, dest är INTE station
                 System.out.println("dest INTE station");
-                Route route = routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest());
-                Coordinates destCoord = route.getStopCoords();
-                Map<Double, Station> coordinateDist = new HashMap<>();
-                for (Station station : stationService.findAll()) {
-                    coordinateDist.put(destCoord.getDistance(station.getCoords()), station);
-                }
-                double minDistance = Collections.min(coordinateDist.keySet());
-
-                Station start = coordinateDist.get(minDistance);
-                Route walkingRoute = routeService.getWalkingRoute(start.getCoords().asString(), requestDTO.getDest());
-
-                publicRoute = routeService.getPublicRoute(requestDTO.getStartPos(), start.getName());
-
-                publicWalkRoute.setPublicRoute(publicRoute);
-                publicWalkRoute.setWalkingRoute(walkingRoute);
-                return ResponseEntity.ok(publicWalkRoute);
-
-            }
-            //Få fram den längsta möjliga försening på linjen.
+                return ResponseEntity.ok(startIsStation(requestDTO.getStartPos(), requestDTO.getDest()));
+            } else {
+            //Kollar om rutt har förseningar och tar fram längsta möjliga försening på linjen
             publicRoute = routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest());
-            ArrayList<Integer> delays = new ArrayList<>();
 
             //Hittar max delay om reports finns tillgänglig
-            double maxDelay;
-            double delayedTravelTime;
+            double maxDelay = maxDelay(publicRoute);
+            double delayedTravelTime = delayedTravelTime(maxDelay, publicRoute);
 
-            if (!publicRoute.getReports().isEmpty()) {
-                for (Report r : publicRoute.getReports()) {
-                    delays.add(r.getDelay());
-                }
-                maxDelay = Collections.max(delays);
-                delayedTravelTime = maxDelay + publicRoute.getTravelTime();
-
-                //Om total restid med delay är längre än tiden att gå, returnera en gå rutt
-                if (delayedTravelTime > publicRoute.getTravelTime()) {
-                    System.out.println("Hämtar gå rutt delay är större än gå-tid");
-                    Route walkingRoute = routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest());
-                    publicWalkRoute.setWalkingRoute(walkingRoute);
-                }
-                return ResponseEntity.status(200).body(publicWalkRoute);
+            //Om total restid med delay är längre än tiden att gå, returnera en gå rutt
+            publicWalkRoute = delayedWalkRoute(delayedTravelTime, publicRoute, publicWalkRoute, requestDTO.getStartPos(), requestDTO.getDest());
+            return ResponseEntity.status(200).body(publicWalkRoute);
             }
-
-            //Sätter kommunal rutt om bägge destinationer är Stationer och
-            System.out.println("Hämtar kommunal rutt");
-            publicWalkRoute.setPublicRoute(publicRoute);
         }
+        //Sätter kommunal rutt om bägge destinationer är Stationer och
+        System.out.println("Hämtar kommunal rutt");
+        publicWalkRoute.setPublicRoute(publicRoute);
         return ResponseEntity.status(200).body(publicWalkRoute);
     }
 
@@ -163,5 +116,76 @@ public class RouteController {
         }
     }
 
+    public PublicWalkRoute destIsStation(String start, String dest){
+        PublicRoute publicRoute = new PublicRoute();
+        PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
+
+        Route route = routeService.getWalkingRoute(start, dest);
+        Coordinates startCoord = route.getStartCoords();
+
+        Map<Double, Station> coordinateDist = new HashMap<>();
+        for (Station station : stationService.findAll()) {
+            coordinateDist.put(startCoord.getDistance(station.getCoords()), station);
+        }
+        double minDistance = Collections.min(coordinateDist.keySet());
+
+        Station station = coordinateDist.get(minDistance);
+        Route walkingroute = routeService.getWalkingRoute(start, station.getCoords().asString());
+
+        publicRoute = routeService.getPublicRoute(station.getName(), dest);
+
+        publicWalkRoute.setWalkingRoute(walkingroute);
+        publicWalkRoute.setPublicRoute(publicRoute);
+        return publicWalkRoute;
+    }
+
+    public PublicWalkRoute startIsStation(String start, String dest){
+        PublicRoute publicRoute = new PublicRoute();
+        PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
+
+        Route route = routeService.getWalkingRoute(start, dest);
+        Coordinates destCoord = route.getStopCoords();
+        Map<Double, Station> coordinateDist = new HashMap<>();
+        for (Station station : stationService.findAll()) {
+            coordinateDist.put(destCoord.getDistance(station.getCoords()), station);
+        }
+        double minDistance = Collections.min(coordinateDist.keySet());
+
+        Station station = coordinateDist.get(minDistance);
+        Route walkingRoute = routeService.getWalkingRoute(station.getCoords().asString(), dest);
+
+        publicRoute = routeService.getPublicRoute(start, station.getName());
+
+        publicWalkRoute.setPublicRoute(publicRoute);
+        publicWalkRoute.setWalkingRoute(walkingRoute);
+        return publicWalkRoute;
+    }
+
+    public double maxDelay(PublicRoute publicRoute) {
+        ArrayList<Integer> delays = new ArrayList<>();
+        double maxDelay = 0;
+
+
+        if (!publicRoute.getReports().isEmpty()) {
+            for (Report r : publicRoute.getReports()) {
+                delays.add(r.getDelay());
+            }
+            maxDelay = Collections.max(delays);
+        }
+        return maxDelay;
+    }
+
+    public double delayedTravelTime(double maxDelay, PublicRoute publicRoute){
+        return maxDelay + publicRoute.getTravelTime();
+    }
+
+    public PublicWalkRoute delayedWalkRoute(double delayedTravelTime, PublicRoute publicRoute, PublicWalkRoute publicWalkRoute, String start, String dest){
+        if (delayedTravelTime > publicRoute.getTravelTime()) {
+            System.out.println("Hämtar gå rutt delay är större än gå-tid");
+            Route walkingRoute = routeService.getWalkingRoute(start, dest);
+            publicWalkRoute.setWalkingRoute(walkingRoute);
+        }
+        return publicWalkRoute;
+    }
 
 }
