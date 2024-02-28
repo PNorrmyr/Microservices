@@ -36,7 +36,7 @@ public class PublicRoute {
 
     private Boolean favorite;
 
-    @OneToMany(mappedBy = "route")
+    @OneToMany(mappedBy = "route", fetch = FetchType.EAGER)
     private List<Report> reports;
 
     public PublicRoute(Long id, String startLoc, String endLoc, String departTime, String arrival, int numberOfSwaps, double travelTime, Boolean favorite) {

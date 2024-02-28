@@ -29,10 +29,9 @@ public class RouteController {
     RestTemplate restTemplate;
     @Autowired
     ReportController reportController;
-    @Autowired
-    PublicRoute publicRoute;
-    @Autowired
-    PublicWalkRoute publicWalkRoute;
+
+
+
 
 
 
@@ -45,6 +44,9 @@ public class RouteController {
     //TODO Work in progress
     @PostMapping
     public ResponseEntity<PublicWalkRoute> getPublicWalkRoute(@RequestHeader("username") String username, @RequestBody RouteRequestDTO requestDTO) {
+        PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
+        PublicRoute publicRoute;
+
         //Kolla om start eller slut destination inte är en station, om inte, skicka till API och returnera gå tid
         if (!stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest())){
             System.out.println("Ingen station, går via API för att hämta tid");
@@ -58,8 +60,11 @@ public class RouteController {
                 //Startpos är station, dest är INTE station
                 System.out.println("dest INTE station");
                 return ResponseEntity.ok(startIsStation(requestDTO.getStartPos(), requestDTO.getDest()));
-            } else {
+            }
+        }
+        //Hämtar kommunal rutt om bägge destinationer är Stationer
             //Kollar om rutt har förseningar och tar fram längsta möjliga försening på linjen
+            System.out.println("Hämtar kommunal rutt");
             publicRoute = routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest());
 
             //Hittar delayedTravelTime om reports finns tillgänglig
@@ -67,15 +72,15 @@ public class RouteController {
             double delayedTravelTime = delayedTravelTime(maxDelay, publicRoute);
 
             //Om delayedTravelTime är längre än tiden att gå, returnera en gå rutt
-            publicWalkRoute = delayedWalkRoute(delayedTravelTime, publicRoute, publicWalkRoute, requestDTO.getStartPos(), requestDTO.getDest());
-            return ResponseEntity.status(200).body(publicWalkRoute);
-            }
+        Route walkingRoute;
+        walkingRoute = routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest());
+        if (delayedTravelTime > walkingRoute.getTime()) {
+            publicWalkRoute.setWalkingRoute(walkingRoute);
+        } else if (delayedTravelTime <= walkingRoute.getTime()){
+            publicWalkRoute.setPublicRoute(publicRoute);
         }
-        //Sätter kommunal rutt om bägge destinationer är Stationer
-        System.out.println("Hämtar kommunal rutt");
-        publicRoute = routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest());
-        publicWalkRoute.setPublicRoute(publicRoute);
-        return ResponseEntity.status(200).body(publicWalkRoute);
+
+            return ResponseEntity.status(200).body(publicWalkRoute);
     }
 
     @PostMapping("/stations")
@@ -136,6 +141,8 @@ public class RouteController {
     }
 
     public PublicWalkRoute destIsStation(String start, String dest){
+        PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
+        PublicRoute publicRoute;
         Route route = routeService.getWalkingRoute(start, dest);
         Coordinates startCoord = route.getStartCoords();
 
@@ -156,6 +163,8 @@ public class RouteController {
     }
 
     public PublicWalkRoute startIsStation(String start, String dest){
+        PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
+        PublicRoute publicRoute;
         Route route = routeService.getWalkingRoute(start, dest);
         Coordinates destCoord = route.getStopCoords();
         Map<Double, Station> coordinateDist = new HashMap<>();
@@ -190,15 +199,6 @@ public class RouteController {
 
     public double delayedTravelTime(double maxDelay, PublicRoute publicRoute){
         return maxDelay + publicRoute.getTravelTime();
-    }
-
-    public PublicWalkRoute delayedWalkRoute(double delayedTravelTime, PublicRoute publicRoute, PublicWalkRoute publicWalkRoute, String start, String dest){
-        if (delayedTravelTime > publicRoute.getTravelTime()) {
-            System.out.println("Hämtar gå rutt delay är större än gå-tid");
-            Route walkingRoute = routeService.getWalkingRoute(start, dest);
-            publicWalkRoute.setWalkingRoute(walkingRoute);
-        }
-        return publicWalkRoute;
     }
 
 }
