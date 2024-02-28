@@ -28,6 +28,10 @@ public class RouteController {
     RestTemplate restTemplate;
     @Autowired
     ReportController reportController;
+    @Autowired
+    PublicRoute publicRoute;
+    @Autowired
+    PublicWalkRoute publicWalkRoute;
 
 
 
@@ -40,9 +44,6 @@ public class RouteController {
     //TODO Work in progress
     @PostMapping
     public ResponseEntity<PublicWalkRoute> getPublicWalkRoute(@RequestBody RouteRequestDTO requestDTO) {
-        PublicRoute publicRoute = new PublicRoute();
-        PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
-
         //Kolla om start eller slut destination inte är en station, om inte, skicka till API och returnera gå tid
         if (!stationService.confirmStation(requestDTO.getStartPos(), requestDTO.getDest())){
             System.out.println("Ingen station, går via API för att hämta tid");
@@ -117,9 +118,6 @@ public class RouteController {
     }
 
     public PublicWalkRoute destIsStation(String start, String dest){
-        PublicRoute publicRoute;
-        PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
-
         Route route = routeService.getWalkingRoute(start, dest);
         Coordinates startCoord = route.getStartCoords();
 
@@ -140,9 +138,6 @@ public class RouteController {
     }
 
     public PublicWalkRoute startIsStation(String start, String dest){
-        PublicRoute publicRoute;
-        PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
-
         Route route = routeService.getWalkingRoute(start, dest);
         Coordinates destCoord = route.getStopCoords();
         Map<Double, Station> coordinateDist = new HashMap<>();
