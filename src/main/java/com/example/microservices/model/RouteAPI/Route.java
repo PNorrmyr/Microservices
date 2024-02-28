@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access= AccessLevel.PROTECTED, force=true)
 @Data
-@Entity
 public class Route {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

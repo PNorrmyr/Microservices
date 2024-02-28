@@ -7,6 +7,7 @@ import com.example.microservices.model.Report.Reports;
 import com.example.microservices.model.RouteAPI.Coordinates;
 import com.example.microservices.model.RouteAPI.Route;
 import com.example.microservices.model.Station.Station;
+import com.example.microservices.model.Station.StationResponse;
 import com.example.microservices.service.RouteService;
 import com.example.microservices.service.StationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +75,22 @@ public class RouteController {
         System.out.println("Hämtar kommunal rutt");
         publicWalkRoute.setPublicRoute(publicRoute);
         return ResponseEntity.status(200).body(publicWalkRoute);
+    }
+
+    @PostMapping("/stations")
+    public ResponseEntity<StationResponse> getClosestStation(@RequestBody Coordinates coordinates){
+        Map<Double, Station> coordinateDist = new HashMap<>();
+
+        for (Station station : stationService.findAll()) {
+            coordinateDist.put(coordinates.getDistance(station.getCoords()), station);
+        }
+        double minDistance = Collections.min(coordinateDist.keySet());
+        StationResponse stationResponse = new StationResponse();
+        stationResponse.setStation(coordinateDist.get(minDistance));
+        stationResponse.setDist(minDistance);
+
+
+        return ResponseEntity.ok(stationResponse);
     }
 
     @GetMapping("/delay/{id}")

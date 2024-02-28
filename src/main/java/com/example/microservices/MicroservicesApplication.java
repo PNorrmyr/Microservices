@@ -23,13 +23,16 @@ public class MicroservicesApplication {
 
 
     public void addStation(){
-/*        stationRepository.save(new Station(1l, "CentralStation", StationTypes.BUS));
-        stationRepository.save(new Station(2l, "Vasastaden", StationTypes.BUS));
-        stationRepository.save(new Station(3l, "Odenplan", StationTypes.TRAIN));
-        stationRepository.save(new Station(4l, "Rådmansgatan", StationTypes.TRAIN));*/
+        stationRepository.save(new Station(1l, "Centralstation", new Coordinates(59.33015d, 18.05821d), StationTypes.BUS));
+        stationRepository.save(new Station(2l, "Hagalund", new Coordinates(59.363754d, 18.008201d), StationTypes.BUS));
+        stationRepository.save(new Station(3l, "Odenplan", new Coordinates(59.34300820438362d, 18.04978350642927d), StationTypes.TRAIN));
+        stationRepository.save(new Station(4l, "Rådmansgatan",new Coordinates(59.3402737d, 18.0590682d), StationTypes.TRAIN));
         stationRepository.save(new Station(5l, "St Eriksplan", new Coordinates(59.3394381d, 18.0369903d), StationTypes.TRAIN));
         stationRepository.save(new Station(6l, "Hötorget", new Coordinates(59.3358309d, 18.0632652d), StationTypes.TRAIN));
         stationRepository.save(new Station(7l, "Ropsten", new Coordinates(59.3573561d, 18.1023962d), StationTypes.TRAIN));
+        stationRepository.save(new Station(8l, "Råsunda", new Coordinates(59.365427d, 59.365427d), StationTypes.BUS));
+        stationRepository.save(new Station(9l, "Näckrosen", new Coordinates(59.366444d, 17.983181d), StationTypes.TRAIN));
+
 
     }
     public void addRoute(){
