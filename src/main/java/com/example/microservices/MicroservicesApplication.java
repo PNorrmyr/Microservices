@@ -42,11 +42,11 @@ public class MicroservicesApplication {
                 "12:40", "12:43", 0, 3d, false ));
         routeRespository.save(new PublicRoute(5l, "Näckrosen", "Hötorget",
                 "11:20", "11:50", 2, 30d, false ));
-        routeRespository.save(new PublicRoute(5l, "Hötorget", "Ropsten",
+        routeRespository.save(new PublicRoute(6l, "Hötorget", "Ropsten",
                 "11:20", "11:26", 0, 6d, false ));
-        routeRespository.save(new PublicRoute(5l, "Ropsten", "Hötorget",
+        routeRespository.save(new PublicRoute(7l, "Ropsten", "Hötorget",
                 "11:20", "11:30", 0, 10d, false ));
-        routeRespository.save(new PublicRoute(5l, "Solna", "Tumba",
+        routeRespository.save(new PublicRoute(8l, "Solna", "Tumba",
                 "11:20", "11:30", 0, 10d, false ));
     }
 
