@@ -30,18 +30,10 @@ public class RouteController {
     @Autowired
     ReportController reportController;
 
-
-
-
-
-
-
     public RouteController(RouteService routeService){
         this.routeService = routeService;
     }
 
-
-    //TODO Work in progress
     @PostMapping
     public ResponseEntity<PublicWalkRoute> getPublicWalkRoute(@RequestHeader("username") String username, @RequestBody RouteRequestDTO requestDTO) {
         PublicWalkRoute publicWalkRoute = new PublicWalkRoute();
@@ -63,15 +55,15 @@ public class RouteController {
             }
         }
         //Hämtar kommunal rutt om bägge destinationer är Stationer
-            //Kollar om rutt har förseningar och tar fram längsta möjliga försening på linjen
-            System.out.println("Hämtar kommunal rutt");
-            publicRoute = routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest());
+        //Kollar om rutt har förseningar och tar fram längsta möjliga försening på linjen
+        System.out.println("Hämtar kommunal rutt");
+        publicRoute = routeService.getPublicRoute(requestDTO.getStartPos(), requestDTO.getDest());
 
-            //Hittar delayedTravelTime om reports finns tillgänglig
-            double maxDelay = maxDelay(publicRoute);
-            double delayedTravelTime = delayedTravelTime(maxDelay, publicRoute);
+        //Hittar delayedTravelTime om reports finns tillgänglig
+        double maxDelay = maxDelay(publicRoute);
+        double delayedTravelTime = delayedTravelTime(maxDelay, publicRoute);
 
-            //Om delayedTravelTime är längre än tiden att gå, returnera en gå rutt
+        //Om delayedTravelTime är längre än tiden att gå, returnera en gå rutt
         Route walkingRoute;
         walkingRoute = routeService.getWalkingRoute(requestDTO.getStartPos(), requestDTO.getDest());
         if (delayedTravelTime > walkingRoute.getTime()) {
@@ -79,8 +71,7 @@ public class RouteController {
         } else if (delayedTravelTime <= walkingRoute.getTime()){
             publicWalkRoute.setPublicRoute(publicRoute);
         }
-
-            return ResponseEntity.status(200).body(publicWalkRoute);
+        return ResponseEntity.ok(publicWalkRoute);
     }
 
     @PostMapping("/stations")
@@ -94,7 +85,6 @@ public class RouteController {
         StationResponse stationResponse = new StationResponse();
         stationResponse.setStation(coordinateDist.get(minDistance));
         stationResponse.setDist(minDistance);
-
 
         return ResponseEntity.ok(stationResponse);
     }

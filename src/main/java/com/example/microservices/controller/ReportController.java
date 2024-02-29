@@ -58,4 +58,14 @@ public class ReportController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteReport(@PathVariable Long id){
+      if (reportService.searchById(id).isEmpty()) {
+          return ResponseEntity.status(204).body("Report not found");
+      } else {
+          reportService.deleteReport(id);
+          return ResponseEntity.status(200).body("Report deleted");
+      }
+    }
+
 }

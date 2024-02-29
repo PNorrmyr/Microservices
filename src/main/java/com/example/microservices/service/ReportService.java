@@ -40,5 +40,9 @@ public class ReportService {
         return reportRepository.findAll();
     }
 
+    public void deleteReport(Long id){
+        reportRepository.deleteById(id);
+    }
+
 
 }
